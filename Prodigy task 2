@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stopwatch App</title>
+<style>body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  
+  .stopwatch {
+    text-align: center;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    width: 300px;
+  }
+  
+  .display {
+    font-size: 2em;
+    margin-bottom: 10px;
+  }
+  
+  .controls button {
+    font-size: 1em;
+    padding: 10px 20px;
+    margin: 5px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .controls button:hover {
+    background-color: #0056b3;
+  }
+  
+  #laps {
+    text-align: left;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 0;
+    margin-top: 10px;
+  }
+  
+  #laps li {
+    list-style-type: none;
+    padding: 5px 0;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  #laps li:first-child {
+    border-top: 1px solid #ddd;
+  }
+  
+  #laps li span {
+    font-weight: bold;
+  }
+  </style>
+</head>
+<body>
+
+<div class="stopwatch">
+  <div class="display">
+    <span id="displayHours">00</span>:<span id="displayMinutes">00</span>:<span id="displaySeconds">00</span>:<span id="displayMilliseconds">000</span>
+  </div>
+  <div class="controls">
+    <button id="startPause" onclick="startPause()">Start</button>
+    <button id="reset" onclick="reset()">Reset</button>
+    <button id="lap" onclick="lap()">Lap</button>
+  </div>
+  <ul id="laps"></ul>
+</div>
+
+<script>let timer; 
+    let startTime; 
+    let elapsedTime = 0;
+    let laps = [];
+    
+    const displayHours = document.getElementById('displayHours');
+    const displayMinutes = document.getElementById('displayMinutes');
+    const displaySeconds = document.getElementById('displaySeconds');
+    const displayMilliseconds = document.getElementById('displayMilliseconds');
+    const lapsList = document.getElementById('laps');
+    const startPauseButton = document.getElementById('startPause');
+    const resetButton = document.getElementById('reset');
+    const lapButton = document.getElementById('lap');
+    
+    function startPause() {
+      if (!timer) {
+        
+        startPauseButton.textContent = 'Pause';
+        startTime = Date.now() - elapsedTime;
+        timer = setInterval(updateTime, 10);
+      } else {
+        
+        startPauseButton.textContent = 'Continue';
+        clearInterval(timer);
+        timer = null;
+      }
+    }
+    
+    function updateTime() {
+      elapsedTime = Date.now() - startTime;
+      updateDisplay(elapsedTime);
+    }
+    
+    function updateDisplay(time) {
+      let milliseconds = ('000' + (time % 1000)).slice(-3);
+      let seconds = ('0' + Math.floor((time / 1000) % 60)).slice(-2);
+      let minutes = ('0' + Math.floor((time / (1000 * 60)) % 60)).slice(-2);
+      let hours = ('0' + Math.floor((time / (1000 * 60 * 60)) % 24)).slice(-2);
+    
+      displayHours.textContent = hours;
+      displayMinutes.textContent = minutes;
+      displaySeconds.textContent = seconds;
+      displayMilliseconds.textContent = milliseconds;
+    }
+    
+    function reset() {
+      clearInterval(timer);
+      timer = null;
+      startPauseButton.textContent = 'Start';
+      elapsedTime = 0;
+      updateDisplay(elapsedTime);
+      laps = [];
+      renderLaps();
+    }
+    
+    function lap() {
+      laps.push(elapsedTime);
+      renderLaps();
+    }
+    
+    function renderLaps() {
+      lapsList.innerHTML = '';
+      laps.forEach((lapTime, index) => {
+        const li = document.createElement('li');
+        const lapNumber = index + 1;
+        const milliseconds = ('000' + (lapTime % 1000)).slice(-3);
+        const seconds = ('0' + Math.floor((lapTime / 1000) % 60)).slice(-2);
+        const minutes = ('0' + Math.floor((lapTime / (1000 * 60)) % 60)).slice(-2);
+        const hours = ('0' + Math.floor((lapTime / (1000 * 60 * 60)) % 24)).slice(-2);
+        li.innerHTML = `<span>Lap ${lapNumber}</span>: ${hours}:${minutes}:${seconds}.${milliseconds}`;
+        lapsList.appendChild(li);
+      });
+    }
+    </script>
+</body>
+</html>
