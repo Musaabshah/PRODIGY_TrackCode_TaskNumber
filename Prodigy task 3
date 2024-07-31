@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tic-Tac-Toe Game</title>
+<style>body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  
+  .game-container {
+    text-align: center;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    width: 300px;
+  }
+  
+  .board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 5px;
+    margin-top: 10px;
+  }
+  
+  .cell {
+    background-color: #ddd;
+    border: 1px solid #ccc;
+    padding: 40px 0;
+    font-size: 2em;
+    cursor: pointer;
+  }
+  
+  .cell:hover {
+    background-color: #eee;
+  }
+  
+  .message {
+    font-size: 1.2em;
+    margin-top: 10px;
+  }
+  
+  #resetBtn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  #resetBtn:hover {
+    background-color: #0056b3;
+  }
+  </style>
+</head>
+<body>
+
+<div class="game-container">
+  <h1>Tic-Tac-Toe</h1>
+  <div id="message" class="message"></div>
+  <div id="board" class="board">
+    <div class="cell" id="cell-0" onclick="handleClick(0)"></div>
+    <div class="cell" id="cell-1" onclick="handleClick(1)"></div>
+    <div class="cell" id="cell-2" onclick="handleClick(2)"></div>
+    <div class="cell" id="cell-3" onclick="handleClick(3)"></div>
+    <div class="cell" id="cell-4" onclick="handleClick(4)"></div>
+    <div class="cell" id="cell-5" onclick="handleClick(5)"></div>
+    <div class="cell" id="cell-6" onclick="handleClick(6)"></div>
+    <div class="cell" id="cell-7" onclick="handleClick(7)"></div>
+    <div class="cell" id="cell-8" onclick="handleClick(8)"></div>
+  </div>
+  <button id="resetBtn" onclick="resetGame()">Reset Game</button>
+</div>
+<script>
+    const PLAYER_X = 'X';
+    const PLAYER_O = 'O';
+    
+    
+    let currentPlayer = PLAYER_X;
+    let gameActive = true;
+    let gameState = ['', '', '', '', '', '', '', '', ''];
+    
+    
+    const winningConditions = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6]
+    ];
+    
+    
+    const messageElement = document.getElementById('message');
+    const board = document.getElementById('board');
+    
+    
+    function handleClick(cellIndex) {
+      if (gameActive && gameState[cellIndex] === '') {
+    
+        gameState[cellIndex] = currentPlayer;
+    
+    
+        updateCell(cellIndex);
+    
+    
+        if (checkWin()) {
+          gameActive = false;
+          messageElement.textContent = `${currentPlayer} wins!`;
+        } else if (checkDraw()) {
+          gameActive = false;
+          messageElement.textContent = 'Draw!';
+        } else {
+    
+          currentPlayer = currentPlayer === PLAYER_X ? PLAYER_O : PLAYER_X;
+          messageElement.textContent = `${currentPlayer}'s turn`;
+        }
+      }
+    }
+    
+    
+    function updateCell(cellIndex) {
+      const cell = document.getElementById(`cell-${cellIndex}`);
+      cell.textContent = gameState[cellIndex];
+    }
+    
+    
+    function checkWin() {
+      for (let condition of winningConditions) {
+        let a = gameState[condition[0]];
+        let b = gameState[condition[1]];
+        let c = gameState[condition[2]];
+        if (a !== '' && a === b && b === c) {
+          return true;
+        }
+      }
+      return false;
+    }
+    
+    
+    function checkDraw() {
+      return !gameState.includes('');
+    }
+    
+    
+    function resetGame() {
+      currentPlayer = PLAYER_X;
+      gameActive = true;
+      gameState = ['', '', '', '', '', '', '', '', ''];
+      messageElement.textContent = `${currentPlayer}'s turn`;
+      clearBoard();
+    }
+    
+    
+    function clearBoard() {
+      const cells = document.getElementsByClassName('cell');
+      for (let cell of cells) {
+        cell.textContent = '';
+      }
+    }
+    
+    
+    messageElement.textContent = `${currentPlayer}'s turn`;
+    </script>
+
+</body>
+</html>
