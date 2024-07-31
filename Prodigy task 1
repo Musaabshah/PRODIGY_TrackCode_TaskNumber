@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      
+      #navbar {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        background-color: #333;
+        z-index: 1000;
+        transition: background-color 0.3s ease;
+      }
+      
+      #navbar ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+      
+      #navbar ul li {
+        float: left;
+      }
+      
+      #navbar ul li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 20px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+      }
+      
+      #navbar ul li a:hover {
+        background-color: #555;
+      }
+      
+      /* Styles for when scrolled */
+      .nav-scrolled {
+        background-color: #222;
+      }
+      
+      .nav-scrolled ul li a {
+        color: #ddd;
+      }
+      
+      .nav-scrolled ul li a:hover {
+        background-color: #444;
+      }
+      </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Navigation Menu</title>
+<script>
+    var navbar = document.getElementById("navbar");
+    
+    
+    var sticky = navbar.offsetTop;
+    
+    
+    function toggleNavbarBackground() {
+      if (window.pageYOffset >= sticky) {
+        navbar.classList.add("nav-scrolled");
+      } else {
+        navbar.classList.remove("nav-scrolled");
+      }
+    }
+    
+    
+    window.onscroll = function() {
+      toggleNavbarBackground();
+    };
+    
+    
+    var menuItems = document.querySelectorAll("#navbar ul li a");
+    
+    menuItems.forEach(function(item) {
+      item.addEventListener("mouseover", function() {
+        this.style.backgroundColor = "#555";
+      });
+    
+      item.addEventListener("mouseout", function() {
+        this.style.backgroundColor = "";
+      });
+    });
+    </script>
+</head>
+<body>
+
+<nav id="navbar">
+  <ul>
+    <li><a href="#">Home</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="#">Services</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="content">
+
+</div>
+
+</body>
+</html>
